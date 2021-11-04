@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+ 
+<title> {% block title%} Create User  {% endblock%} </title>
+ 
+{% block content%} 
+
+    <div class="test">
+        <img src={{new_user.image_url}} alt="Image of user" class="user_img">
+
+        <p> First Name: {{new_user.first_name}} </p>
+        <p>Last Name: {{new_user.last_name}}</p>
+        
+        <button> <a href=/edit/{{new_user.id}}>EDIT</a> </button>
+        <button> <a href=/delete/{{new_user.id}} >DELETE</a> </button>
+    </div>
+
+    <div>
+        <h1>Posts</h1>
+        <ul>
+            {%for item in new_user.post%}
+                <li> <a href=/post/details/{{item.title}} >{{item.title}}</a> </li>
+            {%endfor%}
+        </ul>
+
+        <button> <a href=/createPost/{{new_user.id}}> Create Post </a> </button>
+    </div>
+    <br>
+    
+    <a href="/"> Back to users</a>
+
+{% endblock %}

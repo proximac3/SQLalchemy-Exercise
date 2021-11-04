@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+ 
+<title> {% block title%} Deleter User {% endblock%} </title>
+ 
+{% block content%} 
+
+    <h1>Are you Sure you want to delete the current user?</h1>
+
+    <form action=/deleted/{{personId.id}} method="post" >
+        <button> YES </button>
+    </form>
+
+
+    <a href="/"> Cancel </a>
+
+{% endblock %}
