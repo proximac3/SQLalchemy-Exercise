@@ -1,7 +1,7 @@
 """Blogly application."""
 
 from flask import Flask, request, render_template, flash, redirect, session
-from models import db, connect_db, Person, BlogPost
+from models import db, connect_db, Person, BlogPost, Tags, PostTags
 
 from flask_debugtoolbar import DebugToolbarExtension
 
@@ -81,7 +81,7 @@ def updated(person_id):
 
 @app.route('/delete/<int:person_id>')
 def delete(person_id):
-    """Delete User oonfirmation"""
+    """Delete User Confirmation"""
     person = User.query.get(person_id)
     return render_template('delete.html', personId=person)
 
@@ -120,3 +120,67 @@ def postDetails(post_title):
     post = BlogPost.query.filter(BlogPost.title == post_title).first()
 
     return render_template('post_details.html', post=post)
+
+
+@app.route('/tags')
+def tag_lisyt():
+    """ Show List of Tags"""
+    tags = Tags.query.all()
+    return render_template('tag_list.html', tags=tags)
+
+
+@app.route('/tagform')
+def tag_tag():
+    """Load form to create new tag"""
+    return render_template('tag_form.html')
+
+@app.route('/createTag', methods=['POST'])
+def create_tag():
+    """Create  new Tag"""
+    tag = request.form['tag']
+    new_tag = Tags(name=f'{tag}')
+    db.session.add(new_tag)
+    db.session.commit()
+
+    return redirect('/tags')
+
+@app.route('/tag/details/<tag_id>')
+def tag_details(tag_id):
+    """ Show Tag Details """
+
+    tag = Tags.query.get(tag_id)
+    user = tag.tag_rel
+    return render_template('tag_details.html', tag=tag)
+
+@app.route('/tag/edit/<tag_id>')
+def edit_tag(tag_id):
+    """Loads edit template fortag"""
+    tag = Tags.query.get(tag_id)
+    return render_template('tag_edit.html', tag=tag)
+
+@app.route('/change/<tag_id>', methods=['POST'])
+def tag_change(tag_id):
+    """Confirm tag change and redirect back to tags"""
+    tag_name = request.form['tag']
+    tag = Tags.query.get(tag_id)
+    tag.name = tag_name
+
+    db.session.add(tag)
+    db.session.commit()
+    return redirect('/tags')
+
+@app.route('/delete/tag/<tag_id>')
+def delete_tag(tag_id):
+    """DELETE TAG"""
+    tag = Tags.query.get(tag_id)
+
+    db.session.delete(tag)
+    db.session.commit()
+
+    return redirect('/tags')
+
+@app.route('/post')
+def post_list():
+    """SHOW LIST OF POST"""
+    posts = BlogPost.query.all()
+    return render_template('posts.html', posts=posts)

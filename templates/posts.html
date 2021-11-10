@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+ 
+<title> {% block title%} POSTS {% endblock%} </title>
+ 
+{% block content%} 
+    <h1>ALL POST IN DATABASE </h1>
+    
+    {% for item in  posts %}
+        <p>Title : {{item.title}}, Content : {{item.content}}, Time Created : {{item.time_created}}  user : {{item.users.first_name}} </p>
+    {% endfor %}
+
+{% endblock %}
